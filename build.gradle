@@ -33,83 +33,6 @@ deploy {
     }
 }
 
-class FileDependencySet implements NativeDependencySet {
-    private FileCollection headerFiles;
-    private FileCollection emptySet
-
-    FileDependencySet(FileCollection headerFiles, FileCollection emptySet) {
-        this.headerFiles = headerFiles
-        this.emptySet = emptySet
-    }
-
-    @Override
-    FileCollection getIncludeRoots() {
-        return headerFiles
-    }
-
-    /* We'll manually link our files, thank you very much. */
-    @Override
-    FileCollection getLinkFiles() {
-        return null;
-    }
-
-    @Override
-    FileCollection getRuntimeFiles() {
-        return linkFiles
-    }
-}
-
-def libRCLCPP = new FileDependencySet(
-    //project.files('install/include/'),
-    project.files('/opt/ros2/galactic/include/'),
-    project.files()
-)
-
-
-/* Manually link against libraries here, since we need to link against different libraries depending on architecture */
-nativeUtils.platformConfigs.named("linuxx86-64").configure {
-    it.cppCompiler.args.add('-L/opt/ros2/galactic/lib')
-    it.cppCompiler.args.add('-lrclcpp')
-
-    it.linker.args.add('-L/opt/ros2/galactic/lib')
-    it.linker.args.add('-lrclcpp')
-    it.linker.args.add('-lrcl')
-    it.linker.args.add('-lrcpputils')
-    it.linker.args.add('-lrcutils') 
-    it.linker.args.add('-llibstatistics_collector')
-    it.linker.args.add('-lstatistics_msgs__rosidl_typesupport_cpp')
-    it.linker.args.add('-lament_index_cpp')
-    it.linker.args.add('-lrcl_yaml_param_parser')
-    it.linker.args.add('-lrosgraph_msgs__rosidl_typesupport_cpp')
-    it.linker.args.add('-ltracetools')
-    it.linker.args.add('-lrcl_interfaces__rosidl_typesupport_cpp')
-    it.linker.args.add('-lrmw_implementation')
-    it.linker.args.add('-lrcl_logging_interface')
-    it.linker.args.add('-lrcl_interfaces__rosidl_typesupport_c')
-    it.linker.args.add('-lrcl_logging_spdlog')
-    it.linker.args.add('-lrcl_interfaces__rosidl_generator_c')
-    it.linker.args.add('-lrosidl_runtime_c')
-    it.linker.args.add('-lrosidl_typesupport_cpp')
-    it.linker.args.add('-lrosidl_typesupport_c')
-    it.linker.args.add('-lspdlog')
-    it.linker.args.add('-lbuiltin_interfaces__rosidl_generator_c')
-    it.linker.args.add('-lrmw')
-    it.linker.args.add('-Wl,-rpath,/opt/ros2/galactic/lib')
-}
-
-nativeUtils.platformConfigs.named("linuxathena").configure {
-    it.cppCompiler.args.add('-Linstall/lib') 
-    it.cppCompiler.args.add('-lrclcpp')
-    it.cppCompiler.args.add('-lrcl')
-    it.cppCompiler.args.add('-lrcpputils')
-    it.cppCompiler.args.add('-lrcutils') 
-
-    it.linker.args.add('-L install/lib') 
-    it.linker.args.add('-lrclcpp')
-    it.linker.args.add('-lrcl')
-    it.linker.args.add('-lrcpputils')
-    it.linker.args.add('-lrcutils') 
-}
 
 def deployArtifact = deploy.targets.roborio.artifacts.frcCpp
 
@@ -141,12 +64,6 @@ model {
                     srcDir 'src/main/include'
                 }
             }
-            
-            binaries.all {
-                lib libRCLCPP
-            }
-            
-
 
             // Set deploy task to deploy this component
             deployArtifact.component = it
@@ -162,23 +79,26 @@ model {
 
         }
     }
-    testSuites {
-        frcUserProgramTest(GoogleTestTestSuiteSpec) {
-            testing $.components.frcUserProgram
+    
+    // testSuites {
+        
+    //     frcUserProgramTest(GoogleTestTestSuiteSpec) {
+    //         testing $.components.frcUserProgram
 
-            sources.cpp {
-                source {
-                    srcDir 'src/test/cpp'
-                    include '**/*.cpp'
-                }
-            }
+    //         sources.cpp {
+    //             source {
+    //                 srcDir 'src/test/cpp'
+    //                 include '**/*.cpp'
+    //             }
+    //         }
 
-            // Enable run tasks for this component
-            wpi.cpp.enableExternalTasks(it)
+    //         // Enable run tasks for this component
+    //         wpi.cpp.enableExternalTasks(it)
 
-            wpi.cpp.vendor.cpp(it)
-            wpi.cpp.deps.wpilib(it)
-            wpi.cpp.deps.googleTest(it)
-        }
-    }
+    //         wpi.cpp.vendor.cpp(it)
+    //         wpi.cpp.deps.wpilib(it)
+    //         wpi.cpp.deps.googleTest(it)
+    //     }
+    // }
+    
 }

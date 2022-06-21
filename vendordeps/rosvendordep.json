@@ -1,0 +1,44 @@
+{
+    "name": "ROS",
+    "version": "0.1",
+    "uuid": "9eda8e90-be4f-4695-8a44-8041aaf3f392",
+    "mavenUrls": [
+        ""
+    ],
+    "jsonUrl": "undefined",
+    "fileName": "robotlib.json",
+    "javaDependencies": [
+        {
+            "groupId": "com.1189.frc",
+            "artifactId": "ROS",
+            "version": "0.1"
+        }
+    ],
+    "jniDependencies": [],
+    "cppDependencies": [
+        {
+            "groupId": "com.1189.frc",
+            "artifactId": "ROS",
+            "version": "0.1",
+            "libName": "rclcpp",
+            "headerClassifier": "athenaheaders",
+            "sharedLibrary": true,
+            "skipInvalidPlatforms": true,
+            "binaryPlatforms": [
+                "linuxathena"
+            ]
+        },
+        {
+            "groupId": "com.1189.frc",
+            "artifactId": "ROS",
+            "version": "0.1",
+            "libName": "rcl",
+            "headerClassifier": "x86-64headers",
+            "sharedLibrary": true,
+            "skipInvalidPlatforms": true,
+            "binaryPlatforms": [
+                "linuxx86-64"
+            ]
+        }
+    ]
+}
